@@ -44,5 +44,6 @@ WORKDIR /usr/local/app
 COPY src ./src
 
 # Setup app user to avoid running as root
-# RUN useradd app
-# USER app
+RUN useradd app
+RUN chown -R app: /usr/local/app # gives user all permissions needed to use pyomo
+USER app
