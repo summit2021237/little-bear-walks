@@ -48,3 +48,7 @@ RUN chown -R app: /usr/local/app # gives user all permissions needed to use pyom
 COPY src ./src
 
 USER app
+
+# Solve model
+WORKDIR /usr/local/app/src
+ENTRYPOINT ["../venv/bin/python3", "modeling_problem.py"]
