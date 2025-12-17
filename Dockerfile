@@ -40,10 +40,11 @@ RUN make clean
 
 WORKDIR /usr/local/app
 
-# Copy source code
-COPY src ./src
-
 # Setup app user to avoid running as root
 RUN useradd app
 RUN chown -R app: /usr/local/app # gives user all permissions needed to use pyomo
+
+# Copy source code
+COPY src ./src
+
 USER app
