@@ -1,0 +1,43 @@
+set Times := Morning Midday Afternoon;
+set Dates := 12/01/2025 12/02/2025 12/03/2025;
+set People := p1 p2;
+
+param WalkNeeded :=
+Morning 12/01/2025 1
+Midday 12/01/2025 1
+Afternoon 12/01/2025 1
+Morning 12/02/2025 1
+Midday 12/02/2025 1
+Afternoon 12/02/2025 1
+Morning 12/03/2025 1
+Midday 12/03/2025 0
+Afternoon 12/03/2025 0;
+
+param Ratings :=
+Morning 12/01/2025 p1 0
+Midday 12/01/2025 p1 10
+Afternoon 12/01/2025 p1 7
+Morning 12/02/2025 p1 3
+Midday 12/02/2025 p1 10
+Afternoon 12/02/2025 p1 0
+Morning 12/03/2025 p1 5
+Midday 12/03/2025 p1 9
+Afternoon 12/03/2025 p1 0
+Morning 12/01/2025 p2 1
+Midday 12/01/2025 p2 10
+Afternoon 12/01/2025 p2 8
+Morning 12/02/2025 p2 3
+Midday 12/02/2025 p2 9
+Afternoon 12/02/2025 p2 5
+Morning 12/03/2025 p2 1
+Midday 12/03/2025 p2 0
+Afternoon 12/03/2025 p2 0;
+
+param Lengths :=
+Morning 1
+Midday 2
+Afternoon 2;
+
+param MaxWalkFrac := .55;
+
+param ThreeWalkFactor := .5;
