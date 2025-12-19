@@ -47,9 +47,10 @@ RUN curl -L http://xrl.us/installperlnix | bash
 # Create output directory
 RUN mkdir output
 
-# Copy entrypoint script and source code
+# Copy scripts and source code
 COPY entrypoint.sh .
 RUN chmod +x entrypoint.sh
+COPY solution_to_assignments.pl .
 COPY src ./src
 
 # Solve model
