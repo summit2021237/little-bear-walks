@@ -40,13 +40,17 @@ RUN make clean
 
 WORKDIR /usr/local/app
 
+# Install Perl
+RUN apt install -y curl
+RUN curl -L http://xrl.us/installperlnix | bash
+
+# Create output directory
+RUN mkdir output
+
 # Copy entrypoint script and source code
 COPY entrypoint.sh .
 RUN chmod +x entrypoint.sh
 COPY src ./src
-
-# Create output directory
-RUN mkdir output
 
 # Solve model
 ENTRYPOINT ["./entrypoint.sh"]
