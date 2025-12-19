@@ -40,15 +40,13 @@ RUN make clean
 
 WORKDIR /usr/local/app
 
-# Setup app user to avoid running as root
-RUN useradd app
-RUN chown -R app: /usr/local/app # gives user all permissions needed to use pyomo
-
-# Copy source code
+# Copy entrypoint script and source code
+COPY entrypoint.sh .
+RUN chmod +x entrypoint.sh
 COPY src ./src
 
-USER app
+# Create output directory
+RUN mkdir output
 
 # Solve model
-WORKDIR /usr/local/app/src
-ENTRYPOINT ["../venv/bin/python3", "modeling_problem.py"]
+ENTRYPOINT ["./entrypoint.sh"]
