@@ -1,65 +1,60 @@
 #!/usr/bin/perl
 use strict;
 use warnings;
-use feature qw(switch);
 
 open(my $in,  "<",  "./output/solution.txt")  or die "Can't open solution.txt: $!";
 open(my $out, ">",  "./output/assignments.csv") or die "Can't open assignments.txt: $!";
 
-# Find start of assignments
-while (<$in>) { # assigns each line to $_
-	$_ = trim_whitespace($_);
-	if (/^Assignments.*$/) {
-		<$in>;
-		last;
-	}
-}
-
-# Add assigned walks to list
-my @assigned_walks;
-while (<$in>) {
-	$_ = trim_whitespace($_);
-	if (!/^\(.*/) {
-		last;
-	}
-
-	my @columns = split /:/;
-	my $is_assigned = $columns[2];
-	$is_assigned = trim_whitespace($is_assigned);
-	if ($is_assigned eq "1.0") {
-		my @walk_info = split /,/, $columns[0];
-		@walk_info = map {extract_single_quote_val($_)} @walk_info;
-		push @assigned_walks, [$walk_info[0], $walk_info[1], $walk_info[2]];
-	}
-}
-
-# Add assignments to hashes
 my %date_set;
 my %morning_walks;
 my %midday_walks;
 my %afternoon_walks;
-foreach my $assigned_walk (@assigned_walks) {
-	$date_set{$assigned_walk->[1]} = 1;
-	if ($assigned_walk->[0] eq "Morning") {
-		$morning_walks{$assigned_walk->[1]} = $assigned_walk->[2];
-	} elsif ($assigned_walk->[0] eq "Midday") {
-		$midday_walks{$assigned_walk->[1]} = $assigned_walk->[2];
-	} elsif ("Afternoon") {
-		$afternoon_walks{$assigned_walk->[1]} = $assigned_walk->[2];
-	}
-}
-
-# Write to assignments file
-foreach my $date (sort (keys %date_set)) {
-	print $out "$date";
-	write_person(\%morning_walks, $date);
-	write_person(\%midday_walks, $date);
-	write_person(\%afternoon_walks, $date);
-	print $out "\n";
-}
+find_start_of_assignments();
+add_assignments_to_hashes(add_assigned_walks());
+write_to_csv();
 
 close $in or die "$in: $!";
 close $out or die "$out: $!";
+
+sub find_start_of_assignments {
+	while (<$in>) {
+		$_ = trim_whitespace($_);
+		if (/^Assignments.*$/) {
+			<$in>;
+			last;
+		}
+	}
+}
+
+sub add_assigned_walks {
+	my @assigned_walks;
+	while (<$in>) {
+		$_ = trim_whitespace($_);
+		last if (!/^\(.*/);
+
+		my @columns = split /:/;
+		next if (!is_assigned($columns[2]));
+
+		push @assigned_walks, parse_walk_info($columns[0]);
+	}
+	return \@assigned_walks;
+}
+
+sub is_assigned {
+		my $is_assigned = trim_whitespace($_[0]);
+		return $is_assigned eq "1.0";
+}
+
+sub parse_walk_info {
+	my @walk_info = map {extract_single_quote_val($_)} (split /,/, $_[0]);
+	return \@walk_info;
+}
+
+sub extract_single_quote_val {
+	my $val = $_[0];
+	$val =~ s/^[^']*\'|\'[^']*$//g;
+	return $val;
+}
 
 sub trim_whitespace {
 	my $val = $_[0];
@@ -67,10 +62,28 @@ sub trim_whitespace {
 	return $val;
 }
 
-sub extract_single_quote_val {
-	my $val = $_[0];
-	$val =~ s/^[^']*\'|\'[^']*$//g;
-	return $val;
+sub add_assignments_to_hashes {
+	foreach my $assigned_walk (@{$_[0]}) {
+		my ($time, $date, $person) = @{$assigned_walk};
+		$date_set{$date} = 1;
+		if ($time eq "Morning") {
+			$morning_walks{$date} = $person;
+		} elsif ($time eq "Midday") {
+			$midday_walks{$date} = $person;
+		} elsif ($time eq "Afternoon") {
+			$afternoon_walks{$date} = $person;
+		}
+	}
+}
+
+sub write_to_csv {
+	foreach my $date (sort (keys %date_set)) {
+		print $out "$date";
+		write_person(\%morning_walks, $date);
+		write_person(\%midday_walks, $date);
+		write_person(\%afternoon_walks, $date);
+		print $out "\n";
+	}
 }
 
 sub write_person {
