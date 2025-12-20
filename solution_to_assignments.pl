@@ -1,6 +1,7 @@
 #!/usr/bin/perl
 use strict;
 use warnings;
+use DateTime;
 
 open(my $in,  "<",  "./output/solution.txt")  or die "Can't open solution.txt: $!";
 open(my $out, ">",  "./output/assignments.csv") or die "Can't open assignments.txt: $!";
@@ -77,13 +78,29 @@ sub add_assignments_to_hashes {
 }
 
 sub write_to_csv {
-	foreach my $date (sort (keys %date_set)) {
-		print $out "$date";
-		write_person(\%morning_walks, $date);
-		write_person(\%midday_walks, $date);
-		write_person(\%afternoon_walks, $date);
+	my ($start, $end) = get_date_range();
+	for (my $date = $start; $date <= $end; $date->add(days => 1)) {
+		my $date_str = $date->strftime("%m/%d/%Y");
+		print $out "$date_str";
+		write_person(\%morning_walks, $date_str);
+		write_person(\%midday_walks, $date_str);
+		write_person(\%afternoon_walks, $date_str);
 		print $out "\n";
 	}
+}
+
+sub get_date_range {
+	my @dates = sort (keys %date_set);
+	return string_to_date($dates[0]), string_to_date($dates[-1]);
+}
+
+sub string_to_date {
+	my ($month, $day, $year) = split "/", $_[0];
+	return DateTime->new(
+		day => $day,
+		month => $month,
+		year => $year,
+	);
 }
 
 sub write_person {

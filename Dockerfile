@@ -44,6 +44,9 @@ WORKDIR /usr/local/app
 RUN apt install -y curl
 RUN curl -L http://xrl.us/installperlnix | bash
 
+# Install DateTime
+RUN cpan DateTime
+
 # Create output directory
 RUN mkdir output
 
