@@ -53,7 +53,6 @@ RUN mkdir output
 # Copy scripts and source code
 COPY entrypoint.sh .
 RUN chmod +x entrypoint.sh
-COPY solution_to_assignments.pl .
 COPY src ./src
 
 # Solve model

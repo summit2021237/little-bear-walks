@@ -5,4 +5,6 @@ cd /usr/local/app/src
 cd /usr/local/app
 
 # Parse results
-perl ./solution_to_assignments.pl
+perl ./src/solution_to_assignments.pl
+
+perl ./src/assignments_to_ics.pl
