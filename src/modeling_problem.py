@@ -16,7 +16,7 @@ M.WalkNeeded = Param(M.Times, M.Dates, default=1, within=Binary)
 M.Ratings = Param(M.Times, M.Dates, M.People, default=5, within=NonNegativeIntegers)
 M.Lengths = Param(M.Times, within=NonNegativeIntegers)
 M.MaxWalkFrac = Param(within=NonNegativeReals)
-M.ThreeWalkFactor = Param(within=NonNegativeReals)
+M.AllWalkFactor = Param(within=NonNegativeReals)
 
 # Variables
 M.Assignments = Var(M.Times, M.Dates, M.People, within=Binary)
@@ -24,7 +24,7 @@ M.IsThreeWalks = Var(M.Dates, M.People, within=Binary)
 
 # Objective
 def CalcSchedule(M):
-    return sum(sum(sum(M.Ratings[t, d, p]*M.WalkNeeded[t, d]*M.Assignments[t, d, p] for p in M.People) for d in M.Dates) for t in M.Times) - M.ThreeWalkFactor*sum(sum(M.IsThreeWalks[d, p] for d in M.Dates) for p in M.People)
+    return sum(sum(sum(M.Ratings[t, d, p]*M.WalkNeeded[t, d]*M.Assignments[t, d, p] for p in M.People) for d in M.Dates) for t in M.Times) - M.AllWalkFactor*sum(sum(M.IsThreeWalks[d, p] for d in M.Dates) for p in M.People)
 M.Schedule = Objective(rule=CalcSchedule, sense=maximize)
 
 # Constraints
