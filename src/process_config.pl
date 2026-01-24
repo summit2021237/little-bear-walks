@@ -4,6 +4,7 @@ use warnings;
 use Data::Dumper;
 use DateTime;
 use JSON;
+use POSIX;
 
 open(my $config_file, "<", "../config.json") or die "Can't open config.json $!";
 open(my $dat_file, ">", "modeling_problem_test1.dat") or die "Can't open modeling_problem_test.dat $!";
@@ -12,10 +13,14 @@ my $config_content = do {local $/; <$config_file>};
 
 my $config = decode_json($config_content); 
 
+my @people = @{$config->{people}};
+
 write_sets();
 
 write_walk_needed();
 write_lengths();
+write_max_walk_frac();
+write_all_walk_factor();
 
 # print Dumper($config->{walk_info}->{walks});
 
@@ -65,7 +70,7 @@ sub date_to_string {
 
 sub write_people {
 	write_to_dat("set People :=");
-	foreach my $person (@{$config->{people}}) {
+	foreach my $person (@people) {
 		write_to_dat(" $person->{name}");
 	}
 	write_to_dat(";\n");
@@ -82,6 +87,24 @@ sub write_walk_needed {
 		}
 	}
 	write_to_dat(";\n");
+}
+
+sub write_max_walk_frac {
+	write_to_dat("\nparam MaxWalkFrac := ");
+	if ($config->{other_model_params}->{evenly_distribute}) {
+		write_to_dat(calc_max_walk_frac());
+	} else {
+		write_to_dat($config->{other_model_params}->{max_walk_frac});
+	}
+	write_to_dat(";\n");
+}
+
+sub calc_max_walk_frac {
+	return 1/scalar(@people)+.01; # allow for a small difference between the total amount of time for each person
+}
+
+sub write_all_walk_factor {
+	write_to_dat("\nparam AllWalkFactor := $config->{other_model_params}->{all_walk_factor};\n");
 }
 
 sub write_lengths {
