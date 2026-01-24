@@ -44,8 +44,9 @@ WORKDIR /usr/local/app
 RUN apt install -y curl
 RUN curl -L http://xrl.us/installperlnix | bash
 
-# Install DateTime
+# Install Perl Modules
 RUN cpan DateTime
+RUN cpan JSON
 
 # Create output directory
 RUN mkdir output
@@ -53,6 +54,7 @@ RUN mkdir output
 # Copy scripts and source code
 COPY entrypoint.sh .
 RUN chmod +x entrypoint.sh
+COPY config.json .
 COPY src ./src
 
 # Solve model
