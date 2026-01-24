@@ -21,12 +21,22 @@ close $dat_file or die "$dat_file $!";
 
 sub write_sets {
 	write_times();
+	write_dates();
 }
 
 sub write_times{
-	write_to_dat("set Times :=");
-	foreach my $time (@{$config->get_times()}) {
-		write_to_dat(" $time");
+	write_set_items("Times", @{$config->get_times()});
+}
+
+sub write_dates{
+	write_set_items("Dates", @{$config->get_dates()});
+}
+
+sub write_set_items {
+	my ($name, @items) = @_;
+	write_to_dat("set $name :=");
+	foreach my $item (@items) {
+		write_to_dat(" $item");
 	}
 	write_to_dat(";\n");
 }
