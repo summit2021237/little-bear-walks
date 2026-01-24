@@ -13,9 +13,9 @@ my $config_content = do {local $/; <$config_file>};
 my $config = decode_json($config_content); 
 
 write_sets();
-write_to_dat("\n");
 
 write_walk_needed();
+write_lengths();
 
 sub write_sets {
 	write_times();
@@ -77,6 +77,7 @@ sub write_people {
 }
 
 sub write_walk_needed {
+	write_to_dat("\n");
 	my @walks_not_needed_for_dates = @{$config->{walk_info}->{walks_not_needed}};
 
 	write_to_dat("param WalkNeeded :=");
@@ -86,7 +87,16 @@ sub write_walk_needed {
 			write_to_dat(sprintf("\n%s %s 0", $time, $date));
 		}
 	}
-	write_to_dat(";");
+	write_to_dat(";\n");
+}
+
+sub write_lengths {
+	write_to_dat("\n");
+	write_to_dat("param Lengths :=");
+	foreach my $walk (@{$config->{walk_info}->{walks}}) {
+		write_to_dat("\n$walk->{time} $walk->{duration}");
+	}
+	write_to_dat(";\n");
 }
 
 sub write_to_dat {
