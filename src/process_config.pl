@@ -17,6 +17,8 @@ write_sets();
 write_walk_needed();
 write_lengths();
 
+# print Dumper($config->{walk_info}->{walks});
+
 sub write_sets {
 	write_times();
 	write_dates();
@@ -24,14 +26,9 @@ sub write_sets {
 }
 
 sub write_times {
-	my @times = ();
-	foreach my $walk (@{$config->{walk_info}->{walks}}) {
-		push(@times, $walk->{time});
-	}
-
 	write_to_dat("set Times :=");
-	foreach my $time (@times) {
-		write_to_dat(" $time");
+	foreach my $walk (@{$config->{walk_info}->{walks}}) {
+		write_to_dat(" $walk->{time}");
 	}
 	write_to_dat(";\n");
 }
@@ -67,10 +64,8 @@ sub date_to_string {
 }
 
 sub write_people {
-	my @people = @{$config->{people}};
-
 	write_to_dat("set People :=");
-	foreach my $person (@people) {
+	foreach my $person (@{$config->{people}}) {
 		write_to_dat(" $person->{name}");
 	}
 	write_to_dat(";\n");
@@ -78,9 +73,8 @@ sub write_people {
 
 sub write_walk_needed {
 	write_to_dat("\n");
-	my @walks_not_needed_for_dates = @{$config->{walk_info}->{walks_not_needed}};
-
 	write_to_dat("param WalkNeeded :=");
+	my @walks_not_needed_for_dates = @{$config->{walk_info}->{walks_not_needed}};
 	foreach my $walks_not_needed_for_date (@walks_not_needed_for_dates) {
 		my $date = $walks_not_needed_for_date->{date};
 		foreach my $time (@{$walks_not_needed_for_date->{times}}) {
