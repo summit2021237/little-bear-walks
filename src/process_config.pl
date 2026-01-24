@@ -2,16 +2,18 @@
 use strict;
 use warnings;
 use Data::Dumper;
+use DateTime;
 use JSON;
 
 open(my $config_file, "<", "../config.json") or die "Can't open config.json $!";
-open(my $dat_file, ">", "modeling_problem.dat") or die "Can't open modeling_problem_test.dat $!";
+open(my $dat_file, ">", "modeling_problem_test1.dat") or die "Can't open modeling_problem_test.dat $!";
 
 my $config_content = do {local $/; <$config_file>};
 
 my $config = decode_json($config_content); 
 
 write_times();
+write_dates();
 
 sub write_times {
 	my @times = ();
@@ -24,6 +26,36 @@ sub write_times {
 		write_to_dat(" $time");
 	}
 	write_to_dat(";\n");
+}
+
+sub write_dates {
+	my $start_date = string_to_date($config->{walk_info}->{start_date});
+	my $end_date = string_to_date($config->{walk_info}->{end_date});
+	if (DateTime->compare($start_date, $end_date) == 1) {
+		die "Start date is after end date";
+	}
+
+	write_to_dat("set Dates :=");
+	my $next_date = $start_date;
+	while (DateTime->compare($next_date, $end_date) != 1) {
+		write_to_dat(" " . date_to_string($next_date));
+		$next_date = $next_date->add(days => 1);
+	}
+	write_to_dat(";\n");
+}
+
+sub string_to_date {
+	my @date_components = split "/", $_[0];
+	return DateTime->new(
+		year => $date_components[2],
+		month => $date_components[0],
+		day => $date_components[1],
+	);
+}
+
+sub date_to_string {
+	my $date = $_[0]->{local_c};
+	return sprintf("%02d/%02d/%04d", $date->{month}, $date->{day}, $date->{year});
 }
 
 sub write_to_dat {
