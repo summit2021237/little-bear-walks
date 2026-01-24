@@ -14,6 +14,7 @@ my $config = decode_json($config_content);
 
 write_times();
 write_dates();
+write_people();
 
 sub write_times {
 	my @times = ();
@@ -56,6 +57,16 @@ sub string_to_date {
 sub date_to_string {
 	my $date = $_[0]->{local_c};
 	return sprintf("%02d/%02d/%04d", $date->{month}, $date->{day}, $date->{year});
+}
+
+sub write_people {
+	my @people = @{$config->{people}};
+
+	write_to_dat("set People :=");
+	foreach my $person (@people) {
+		write_to_dat(" $person->{name}");
+	}
+	write_to_dat(";\n");
 }
 
 sub write_to_dat {
