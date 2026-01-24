@@ -20,16 +20,9 @@ write_sets();
 close $dat_file or die "$dat_file $!";
 
 sub write_sets {
-	write_times();
-	write_dates();
-}
-
-sub write_times{
 	write_set_items("Times", @{$config->get_times()});
-}
-
-sub write_dates{
 	write_set_items("Dates", @{$config->get_dates()});
+	write_set_items("People", @{$config->get_people()});
 }
 
 sub write_set_items {

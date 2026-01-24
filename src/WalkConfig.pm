@@ -58,4 +58,12 @@ sub date_to_string {
 	return sprintf("%02d/%02d/%04d", $date->{month}, $date->{day}, $date->{year});
 }
 
+sub get_people {
+	my @people = ();
+	foreach my $person (@{$_[0]->{decoded_json}->{people}}) {
+		push(@people, $person->{name});
+	}
+	return \@people;
+}
+
 1;
