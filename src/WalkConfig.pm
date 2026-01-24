@@ -17,6 +17,8 @@ sub new {
 	$walk_config{end_date} = string_to_date($decoded_json->{walk_info}->{end_date});
 	validate_dates(\%walk_config);
 
+	$walk_config{people_to_info} = get_people_to_info($decoded_json);
+
 	return bless \%walk_config, $class_name;
 }
 
@@ -33,6 +35,14 @@ sub validate_dates {
 	if (DateTime->compare($_[0]->{start_date}, $_[0]->{end_date}) == 1) {
 		die "Start date is after end date";
 	}
+}
+
+sub get_people_to_info {
+	my %people_to_info = ();
+	foreach my $person (@{$_[0]->{people}}) {
+		$people_to_info{$person->{name}} = $person;
+	}
+	return \%people_to_info;
 }
 
 sub get_times {
@@ -58,12 +68,18 @@ sub date_to_string {
 	return sprintf("%02d/%02d/%04d", $date->{month}, $date->{day}, $date->{year});
 }
 
-sub get_people {
-	my @people = ();
-	foreach my $person (@{$_[0]->{decoded_json}->{people}}) {
-		push(@people, $person->{name});
-	}
-	return \@people;
+sub get_person_names {
+	my @person_names = keys(%{$_[0]->{people_to_info}});
+	return \@person_names;
+	# my @person_names = ();
+	# foreach my $person (@{$_[0]->{decoded_json}->{people}}) {
+	# 	push(@person_names, $person->{name});
+	# }
+	# return \@person_names;
+}
+
+sub get_walks_not_needed {
+	return $_[0]->{decoded_json}->{walk_info}->{walks_not_needed};
 }
 
 1;
