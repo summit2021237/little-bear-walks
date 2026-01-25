@@ -20,6 +20,7 @@ write_sets();
 
 write_walk_needed();
 write_ratings();
+write_lengths();
 
 close $dat_file or die "$dat_file $!";
 
@@ -50,8 +51,7 @@ sub add_walks_not_needed_for_date {
 	my ($val_refs_ref, $walks_not_needed_for_date) = @_;
 	my $date = $walks_not_needed_for_date->{date};
 	foreach my $time (@{$walks_not_needed_for_date->{times}}) {
-		my @val = ($time, $date, 0);
-		push(@{$val_refs_ref}, \@val);
+		push(@{$val_refs_ref}, [$time, $date, 0]);
 	}
 }
 
@@ -101,6 +101,14 @@ sub add_ratings_for_person_for_date {
 
 sub is_valid_rating {
 	return $_[0] >= 0 && $_[0] <= 9;
+}
+
+sub write_lengths {
+	my @val_refs = ();
+	foreach my $time (@{$config->get_times()}) {
+		push(@val_refs, [$time, $config->get_length($time)]);
+	}
+	write_multi_dim_param("Lengths", @val_refs);
 }
 
 sub write_multi_dim_param {
