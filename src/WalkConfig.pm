@@ -98,4 +98,12 @@ sub get_length {
 	die "walk info for time $time does not exist";
 }
 
+sub is_evenly_distributed {
+	return $_[0]->{decoded_json}->{other_model_params}->{evenly_distribute};
+}
+
+sub get_all_walk_factor {
+	return $_[0]->{decoded_json}->{other_model_params}->{all_walk_factor};
+}
+
 1;

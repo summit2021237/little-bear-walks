@@ -17,10 +17,7 @@ open(my $dat_file, ">", "./output/modeling_problem_test1.dat") or die "Can't ope
 my $config = WalkConfig->new($config_content);
 
 write_sets();
-
-write_walk_needed();
-write_ratings();
-write_lengths();
+write_params();
 
 close $dat_file or die "$dat_file $!";
 
@@ -37,6 +34,14 @@ sub write_set {
 		write_to_dat(" $item");
 	}
 	write_to_dat(";\n");
+}
+
+sub write_params {
+	write_walk_needed();
+	write_ratings();
+	write_lengths();
+	write_max_walk_frac();
+	write_all_walk_factor();
 }
 
 sub write_walk_needed {
@@ -123,6 +128,29 @@ sub write_multi_dim_param {
 		write_to_dat(sprintf("\n%s", join(" ", @{$val_ref})));
 	}
 	write_to_dat(";\n");
+}
+
+sub write_max_walk_frac {
+	my $val = 1;
+	if ($config->is_evenly_distributed()) {
+		$val = calc_max_walk_frac();
+	} else {
+		# TODO: add support for different percentages for each person
+	}
+	write_one_dim_param("MaxWalkFrac", $val);
+}
+
+sub calc_max_walk_frac {
+	return 1/scalar(@{$config->get_person_names()})+.01; # allow for a small difference between the total amount of time for each person
+}
+
+sub write_all_walk_factor {
+	write_one_dim_param("AllWalkFactor", $config->get_all_walk_factor());
+}
+
+sub write_one_dim_param {
+	my ($name, $val) = @_;
+	write_to_dat("\nparam $name := $val;\n");
 }
 
 sub write_to_dat {
