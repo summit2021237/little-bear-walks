@@ -71,15 +71,15 @@ sub date_to_string {
 sub get_person_names {
 	my @person_names = keys(%{$_[0]->{people_to_info}});
 	return \@person_names;
-	# my @person_names = ();
-	# foreach my $person (@{$_[0]->{decoded_json}->{people}}) {
-	# 	push(@person_names, $person->{name});
-	# }
-	# return \@person_names;
 }
 
 sub get_walks_not_needed {
 	return $_[0]->{decoded_json}->{walk_info}->{walks_not_needed};
+}
+
+sub get_ratings_file_name {
+	my $person_name = $_[1];
+	return $_[0]->{people_to_info}->{$person_name}->{ratings_file};
 }
 
 1;

@@ -5,6 +5,7 @@ use warnings;
 use lib "/usr/local/app/src";
 
 use Data::Dumper;
+use Text::CSV;
 use WalkConfig;
 
 open(my $config_file, "<", "./config.json") or die "Can't open config.json $!";
@@ -18,6 +19,7 @@ my $config = WalkConfig->new($config_content);
 write_sets();
 
 write_walk_needed();
+write_ratings();
 
 close $dat_file or die "$dat_file $!";
 
@@ -45,18 +47,69 @@ sub write_walk_needed {
 }
 
 sub add_walks_not_needed_for_date {
-	my $val_refs_ref = $_[0];
-	my $walks_not_needed_for_date = $_[1];
-
+	my ($val_refs_ref, $walks_not_needed_for_date) = @_;
 	my $date = $walks_not_needed_for_date->{date};
 	foreach my $time (@{$walks_not_needed_for_date->{times}}) {
 		my @val = ($time, $date, 0);
-		push(@$val_refs_ref, \@val);
+		push(@{$val_refs_ref}, \@val);
 	}
+}
+
+sub write_ratings {
+	my @val_refs = ();
+	foreach my $person_name (@{$config->get_person_names()}) {
+		add_ratings_for_person(\@val_refs, $person_name);
+	}
+	write_multi_dim_param("Ratings", @val_refs);
+}
+
+sub add_ratings_for_person {
+	my ($val_refs_ref, $person_name) = @_;
+
+	my $csv = Text::CSV->new({
+			binary => 1,
+			auto_diag => 1
+		});
+
+	my $file_name = $config->get_ratings_file_name($person_name);
+	open(my $ratings_file, "<", sprintf("./data/%s", $file_name)) or die "Can't open $file_name $!";
+
+	$csv->getline($ratings_file); # skip header
+
+	while (my $data = $csv->getline($ratings_file)) {
+		add_ratings_for_person_for_date($val_refs_ref, $person_name, $data);
+	}
+
+	close $ratings_file or die "$ratings_file $!";
+}
+
+sub add_ratings_for_person_for_date {
+	my ($val_refs_ref, $person_name, $data) = @_;
+
+	my $date = "";
+	if ($data->[0] =~ /([0-9]{2}\/[0-9]{2}\/[0-9]{4})/) {
+		$date = $1;
+	}
+
+	my @times = @{$config->get_times()};
+	for (my $i = 0; $i < scalar(@times); $i++) {
+		if (is_valid_rating($data->[$i + 1])) {
+			push(@{$val_refs_ref}, [$times[$i], $date, $person_name, $data->[$i + 1]]);
+		}
+	}
+}
+
+sub is_valid_rating {
+	return $_[0] >= 0 && $_[0] <= 9;
 }
 
 sub write_multi_dim_param {
 	my ($name, @val_refs) = @_;
+
+	if (scalar(@val_refs) == 0) {
+		return;
+	}
+
 	write_to_dat("\nparam $name :=");
 	foreach my $val_ref (@val_refs) {
 		write_to_dat(sprintf("\n%s", join(" ", @{$val_ref})));

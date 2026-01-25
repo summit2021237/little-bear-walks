@@ -47,6 +47,7 @@ RUN curl -L http://xrl.us/installperlnix | bash
 # Install Perl Modules
 RUN cpan DateTime
 RUN cpan JSON
+RUN cpan Text::CSV
 
 # Create output directory
 RUN mkdir output
@@ -55,6 +56,7 @@ RUN mkdir output
 COPY entrypoint.sh .
 RUN chmod +x entrypoint.sh
 COPY config.json .
+COPY data ./data
 COPY src ./src
 
 # Solve model
