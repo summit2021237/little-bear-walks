@@ -10,4 +10,5 @@ cd /usr/local/app
 # Parse results
 perl ./src/solution_to_assignments.pl
 
+# Create ics files
 perl ./src/assignments_to_ics.pl

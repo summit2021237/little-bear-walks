@@ -22,35 +22,27 @@ sub new {
 	return bless \%walk_config, $class_name;
 }
 
-sub string_to_date {
-	my @date_components = split "/", $_[0];
-	return DateTime->new(
-		year => $date_components[2],
-		month => $date_components[0],
-		day => $date_components[1],
-	);
-}
-
-sub validate_dates {
-	if (DateTime->compare($_[0]->{start_date}, $_[0]->{end_date}) == 1) {
-		die "Start date is after end date";
-	}
-}
-
-sub get_people_to_info {
-	my %people_to_info = ();
-	foreach my $person (@{$_[0]->{people}}) {
-		$people_to_info{$person->{name}} = $person;
-	}
-	return \%people_to_info;
-}
-
 sub get_times {
 	my @times = ();
 	foreach my $walk (@{$_[0]->{decoded_json}->{walk_info}->{walks}}) {
 		push(@times, $walk->{time});
 	}
 	return \@times;
+}
+
+sub get_duration {
+	my $time = $_[1];
+
+	my $i = 0;
+	my @walks = @{$_[0]->{decoded_json}->{walk_info}->{walks}};
+	while ($i < scalar(@walks)) {
+		my $walk = $walks[$i];
+		if ($walk->{time} eq $time) {
+			return $walk->{duration};
+		}
+		$i++;
+	}
+	die "$time is not a valid walk time";
 }
 
 sub get_dates {
@@ -68,18 +60,51 @@ sub date_to_string {
 	return sprintf("%02d/%02d/%04d", $date->{month}, $date->{day}, $date->{year});
 }
 
-sub get_person_names {
-	my @person_names = keys(%{$_[0]->{people_to_info}});
-	return \@person_names;
+sub string_to_date {
+	my @date_components = split "/", $_[0];
+	return DateTime->new(
+		year => $date_components[2],
+		month => $date_components[0],
+		day => $date_components[1],
+	);
+}
+
+sub validate_dates {
+	if (DateTime->compare($_[0]->{start_date}, $_[0]->{end_date}) == 1) {
+		die "Start date is after end date";
+	}
 }
 
 sub get_walks_not_needed {
 	return $_[0]->{decoded_json}->{walk_info}->{walks_not_needed};
 }
 
+sub get_people_to_info {
+	my %people_to_info = ();
+	foreach my $person (@{$_[0]->{people}}) {
+		$people_to_info{$person->{name}} = $person;
+	}
+	return \%people_to_info;
+}
+
+sub get_person_names {
+	my @person_names = keys(%{$_[0]->{people_to_info}});
+	return \@person_names;
+}
+
 sub get_ratings_file_name {
 	my $person_name = $_[1];
 	return $_[0]->{people_to_info}->{$person_name}->{ratings_file};
+}
+
+sub get_event_time {
+	my ($walk_config, $name, $time) = @_;
+	return $_[0]->{people_to_info}->{$name}->{walk_event_info}->{lc($time)}->{event_time};
+}
+
+sub get_event_name {
+	my ($walk_config, $name, $time) = @_;
+	return $_[0]->{people_to_info}->{$name}->{walk_event_info}->{lc($time)}->{event_name};
 }
 
 sub get_length {

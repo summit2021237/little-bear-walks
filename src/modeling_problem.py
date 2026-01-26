@@ -49,7 +49,7 @@ def EnsureIsThreeWalksVarUpper(M, d, p):
 M.IsThreeWalksVarUpper = Constraint(M.Dates, M.People, rule=EnsureIsThreeWalksVarUpper)
 
 # Create a problem instance
-instance = M.create_instance("modeling_problem.dat")
+instance = M.create_instance("../data/modeling_problem.dat")
 
 # Indicate which solver to use
 Opt = SolverFactory("glpk")
