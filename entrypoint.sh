@@ -1,4 +1,7 @@
 #!/bin/bash
+# Load and create dat file
+perl ./src/config_to_dat.pl
+
 # Solve model
 cd /usr/local/app/src
 ../venv/bin/python3 modeling_problem.py > ../output/solution.txt

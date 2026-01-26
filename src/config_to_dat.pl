@@ -12,7 +12,7 @@ open(my $config_file, "<", "./config.json") or die "Can't open config.json $!";
 my $config_content = do {local $/; <$config_file>};
 close $config_file or die "$config_file: $!";
 
-open(my $dat_file, ">", "./output/modeling_problem_test1.dat") or die "Can't open modeling_problem.dat $!";
+open(my $dat_file, ">", "./data/modeling_problem.dat") or die "Can't open modeling_problem.dat $!";
 
 my $config = WalkConfig->new($config_content);
 
