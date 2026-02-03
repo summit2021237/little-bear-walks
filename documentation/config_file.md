@@ -2,7 +2,7 @@
 The `config.json` file should be located in the `config` directory. See `config_example.json` in the `documentation` directory for a complete example. The JSON object has three fields with names `walk_info`, `people`, and `other_model_values`.
 
 ## `walk_info`
-This field is an object with
+This field is an object with fields
 - `walks`: An array of objects describing walk times
 - `start_date`: The start date for assigning walks, formatted as `MM/DD/YYYY`
 - `end_date`: The end date for assigning walks, formatted as `MM/DD/YYYY`
@@ -19,7 +19,7 @@ Example:
 ```
 
 ### `walks`
-This field is an array of objects with
+This field is an array of objects with fields
 - `time`: The name of the walk time
 - `duration`: The duration of the walk at `time`
   - Units do not matter but should be the same for each object in `walks`
@@ -33,7 +33,7 @@ Example:
 ```
 
 ### `walk_not_needed`
-This field is an array of objects with
+This field is an array of objects with fields
 - `date`: The date where at least one walk time is not needed
 - `times`: An array of the walk times that are not needed
 
@@ -46,7 +46,7 @@ Example:
 ```
 
 ## `people`
-This field is an array of objects describing people to assign to walks with
+This field is an array of objects describing people to assign to walks with fields
 - `name`: The person's name
 - `ratings_file`: The name of the CSV file that the person's walk ratings are in
   - The ratings file should be in the `data` directory
@@ -63,7 +63,7 @@ Example:
 ```
 
 ### `walk_event_info`
-This field is an array of objects for each walk time with
+This field is an array of objects for each walk time with fields
 - `time`: The name of the walk time that this calendar event info is for
 - `event_name`: What the calendar event should be called
 - `event_time`: When the calendar event should be scheduled for, formatted as `HH:MM`
@@ -82,7 +82,18 @@ This field is an object with fields
 - `evenly_distribute`: `true` if each person should be assigned to roughly the same total duration of walk time, `false` otherwise
   - If `false`, each object in the `people` array must have another field `max_walk_portion` describing the maximum percentage of the total duration of the walks the person can have
 - `all_walk_multiplier`: Multiplier to decrease the possibility of one person being assigned to all the walks for a day
-  - *<TODO: var name>* in the function to maximize, <TODO: write the function on a new line and centered>
+  - $A$ in the objective function,
+
+$$\sum_{t\in T}\sum_{d\in D}\sum_{p\in P}r_{t,d,p}w_{t,d}x_{t,d,p}-A\sum_{p\in P}\sum_{d\in D}y_{d,p}\text{,}$$
+
+with  
+$\quad$ $T$ being the set of walk times,  
+$\quad$ $D$ being the set of dates,  
+$\quad$ $P$ being the set of people,  
+$\quad$ $r_{t,d,p}$ being person $p$'s rating for the walk on date $d$ at time $t$  
+$\quad$ $w_{t,d}=\begin{cases}1 & \text{if a walk is needed for date $d$ and time $t$}\\ 0 & \text{otherwise}\end{cases}$
+$\quad$ $A$ being `all_walk_multiplier`, and  
+$\quad$ $y_{d,p}=\begin{cases}1 & \text{if person $p$ is assigned to all the walk times on date $d$}\\ 0 & \text{otherwise.}\end{cases}$
 
 Example:
 ```
