@@ -1,5 +1,5 @@
 # Config File
-The `config.json` file should be located in the `config` directory. See `config_example.json` in the `documentation` directory for a complete example. The JSON object has three fields with names `walk_info`, `people`, and `other_model_values`.
+The `config.json` file should be located in the `config` directory. See [`config_example.json`](https://github.com/summit2021237/little-bear-walks/blob/main/documentation/config_example.json) in the `documentation` directory for a complete example. The JSON object has three fields with names `walk_info`, `people`, and `other_model_values`.
 
 ## `walk_info`
 This field is an object with fields
@@ -21,14 +21,13 @@ Example:
 ### `walks`
 This field is an array of objects with fields
 - `time`: The name of the walk time
-- `duration`: The duration of the walk at `time`
-  - Units do not matter but should be the same for each object in `walks`
+- `duration`: The duration of the walk at `time` in minutes
 
 Example:
 ```
 {
     "time": "Morning",
-    "duration": 1
+    "duration": 30
 }
 ```
 
@@ -50,7 +49,7 @@ This field is an array of objects describing people to assign to walks with fiel
 - `name`: The person's name
 - `ratings_file`: The name of the CSV file that the person's walk ratings are in
   - The ratings file should be in the `data` directory
-- `walk_event_info`: An array of objects describing how that person's calendar events should be created
+- `walk_event_info`: An object with fields for each walk time describing how that person's calendar events should be created
 - `max_walk_portion`: An optional field describing the maximum percentage of the total duration of the walks that person can have (see `evenly_distribute` from [`other_model_values`](#other_model_values))
 
 Example:
@@ -63,7 +62,7 @@ Example:
 ```
 
 ### `walk_event_info`
-This field is an array of objects for each walk time with fields
+This is an object with fields relating each walk time (lowercase name of the walk time) to an object describing calendar event info with fields
 - `time`: The name of the walk time that this calendar event info is for
 - `event_name`: What the calendar event should be called
 - `event_time`: When the calendar event should be scheduled for, formatted as `HH:MM`
@@ -71,9 +70,11 @@ This field is an array of objects for each walk time with fields
 Example:
 ```
 {
-    "time": "Morning",
-    "event_name": "Walk 🐕",
-    "event_time": "06:30"
+    "morning": {
+        "time": "Morning",
+        "event_name": "Walk 🐕",
+        "event_time": "06:30"
+    }
 }
 ```
 
