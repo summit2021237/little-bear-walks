@@ -1,0 +1,95 @@
+{
+	"walk_info": {
+		"walks": [{
+			"time": "Morning",
+			"duration": 1
+		},
+		{
+			"time": "Midday",
+			"duration": 2
+		},
+		{
+			"time": "Afternoon",
+			"duration": 2
+		}
+		],
+		"start_date": "01/01/2026",
+		"end_date": "01/31/2026",
+		"walks_not_needed": [{
+			"date": "01/02/2026",
+			"times": ["Midday", "Afternoon"]
+		},
+		{
+			"date": "01/03/2026",
+			"times": ["Morning", "Midday", "Afternoon"]
+		}]
+	},
+	"people": [{
+		"name": "Person1",
+		"ratings_file": "2026_january_person1.csv",
+		"walk_event_info": {
+			"morning": {
+				"time": "Morning",
+				"event_name": "Walk 🐕",
+				"event_time": "06:30"
+			},
+			"midday": {
+				"time": "Midday",
+				"event_name": "Walk 🐕",
+				"event_time": "12:00"
+			},
+			"afternoon": {
+				"time": "Afternoon",
+				"event_name": "Walk 🐕",
+				"event_time": "16:00"
+			}
+		}
+	},
+	{
+		"name": "Person2",
+		"ratings_file": "2026_january_person2.csv",
+		"walk_event_info": {
+			"morning": {
+				"time": "Morning",
+				"event_name": "Walk 🐕",
+				"event_time": "08:00"
+			},
+			"midday": {
+				"time": "Midday",
+				"event_name": "Walk 🐕",
+				"event_time": "10:30"
+			},
+			"afternoon": {
+				"time": "Afternoon",
+				"event_name": "Walk 🐕",
+				"event_time": "16:00"
+			}
+		}
+	},
+	{
+		"name": "Person3",
+		"ratings_file": "2026_january_person3.csv",
+		"walk_event_info": {
+			"morning": {
+				"time": "Morning",
+				"event_name": "Walk 🐕 6",
+				"event_time": "06:00"
+			},
+			"midday": {
+				"time": "Midday",
+				"event_name": "Walk 🐕 11",
+				"event_time": "11:00"
+			},
+			"afternoon": {
+				"time": "Afternoon",
+				"event_name": "Walk 🐕 4",
+				"event_time": "16:00"
+			}
+		}
+	}
+	],
+	"other_model_params": {
+		"evenly_distribute": true,
+		"all_walk_factor": 7.5
+	}
+}
