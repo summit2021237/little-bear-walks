@@ -90,13 +90,10 @@ with
 $\quad$ $T$ being the set of walk times,  
 $\quad$ $D$ being the set of dates,  
 $\quad$ $P$ being the set of people,  
-$\quad$ $r_{t,d,p}$ being person $p$'s rating for the walk on date $d$ at time $t$
-
-$$w_{t,d}=\begin{cases}1 & \text{if a walk is needed for date $d$ and time $t$}\\ 0 & \text{otherwise}\end{cases}$$
-
-$\quad$ $A$ being `all_walk_multiplier`, and
-
-$$y_{d,p}=\begin{cases}1 & \text{if person $p$ is assigned to all the walk times on date $d$}\\ 0 & \text{otherwise.}\end{cases}$$
+$\quad$ $r_{t,d,p}$ being person $p$'s rating for the walk on date $d$ at time $t$  
+$\quad$ $w_{t,d}=1$ if a walk is needed for date $d$ and time $t$ and $w_{t,d}=0$ otherwise  
+$\quad$ $A$ being `all_walk_multiplier`, and  
+$\quad$ $y_{d,p}=1$ if person $p$ is assigned to all the walk times on date $d$ and $y_{d,p}=0$ otherwise.
 
 Example:
 ```
