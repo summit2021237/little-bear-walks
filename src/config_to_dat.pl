@@ -4,7 +4,6 @@ use warnings;
 
 use lib "/usr/local/app/src";
 
-use Data::Dumper;
 use Text::CSV;
 use WalkConfig;
 
@@ -98,8 +97,12 @@ sub add_ratings_for_person_for_date {
 
 	my @times = @{$config->get_times()};
 	for (my $i = 0; $i < scalar(@times); $i++) {
-		if (is_valid_rating($data->[$i + 1])) {
-			push(@{$val_refs_ref}, [$times[$i], $date, $person_name, $data->[$i + 1]]);
+		my $rating = $data->[$i + 1];
+		if ($rating eq "N/A") {
+			$rating = 0;
+		}
+		if (is_valid_rating($rating)) {
+			push(@{$val_refs_ref}, [$times[$i], $date, $person_name, $rating]);
 		}
 	}
 }

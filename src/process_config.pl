@@ -1,7 +1,6 @@
 #1/usr/bin/perl
 use strict;
 use warnings;
-use Data::Dumper;
 use DateTime;
 use JSON;
 use POSIX;
@@ -21,8 +20,6 @@ write_walk_needed();
 write_lengths();
 write_max_walk_frac();
 write_all_walk_factor();
-
-# print Dumper($config->{walk_info}->{walks});
 
 sub write_sets {
 	write_times();

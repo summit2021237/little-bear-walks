@@ -3,8 +3,6 @@ use strict;
 use warnings;
 
 use lib "/usr/local/app/src";
-# use open qw(:std :encoding(UTF-8));
-# use utf8;
 
 use DateTime;
 use WalkConfig;
@@ -35,9 +33,9 @@ sub create_config {
 sub create_output_files {
 	my %outs = ();
 	foreach my $name (@names) {
-		 open(my $out, ">:utf8", "./output/$name.ics") or die "Can't open $name.ics: $!";
-		 $outs{$name} = \$out;
-		 start_file(\$out);
+		open(my $out, ">:utf8", "./output/$name.ics") or die "Can't open $name.ics: $!";
+		$outs{$name} = \$out;
+		start_file(\$out);
 	}
 	return \%outs;
 }
@@ -88,6 +86,9 @@ sub add_event_for_time {
 
 sub create_dtstart {
 	my ($date, $time, $name) = @_;
+	if ($name eq "N/A") {
+		return;
+	}
 	my ($hour, $minute) = split(":", $config->get_event_time($name, $time));
 	return create_datetime_string({
 			year => $date->{year},
