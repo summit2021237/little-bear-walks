@@ -88,10 +88,10 @@ sub write_walk_needed {
 
 sub write_max_walk_frac {
 	write_to_dat("\nparam MaxWalkFrac := ");
-	if ($config->{other_model_params}->{evenly_distribute}) {
+	if ($config->{other_model_values}->{evenly_distribute}) {
 		write_to_dat(calc_max_walk_frac());
 	} else {
-		write_to_dat($config->{other_model_params}->{max_walk_frac});
+		write_to_dat($config->{other_model_values}->{max_walk_frac});
 	}
 	write_to_dat(";\n");
 }
@@ -101,7 +101,7 @@ sub calc_max_walk_frac {
 }
 
 sub write_all_walk_multiplier {
-	write_to_dat("\nparam AllWalkMultiplier := $config->{other_model_params}->{all_walk_multiplier};\n");
+	write_to_dat("\nparam AllWalkMultiplier := $config->{other_model_values}->{all_walk_multiplier};\n");
 }
 
 sub write_lengths {

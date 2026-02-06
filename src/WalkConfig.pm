@@ -124,11 +124,11 @@ sub get_length {
 }
 
 sub is_evenly_distributed {
-	return $_[0]->{decoded_json}->{other_model_params}->{evenly_distribute};
+	return $_[0]->{decoded_json}->{other_model_values}->{evenly_distribute};
 }
 
 sub get_all_walk_multiplier {
-	return $_[0]->{decoded_json}->{other_model_params}->{all_walk_multiplier};
+	return $_[0]->{decoded_json}->{other_model_values}->{all_walk_multiplier};
 }
 
 1;
