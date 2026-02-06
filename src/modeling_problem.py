@@ -14,7 +14,7 @@ M.Times = Set()
 # Parameters
 M.WalkNeeded = Param(M.Times, M.Dates, default=1, within=Binary)
 M.Ratings = Param(M.Times, M.Dates, M.People, default=5, within=NonNegativeIntegers)
-M.Lengths = Param(M.Times, within=NonNegativeIntegers)
+M.Durations = Param(M.Times, within=NonNegativeIntegers)
 M.MaxWalkPortion = Param(within=NonNegativeReals)
 M.AllWalkMultiplier = Param(within=NonNegativeReals)
 
@@ -33,7 +33,7 @@ def EnsureOnePersonForWalk(M, t, d):
 M.OnePersonForWalk= Constraint(M.Times, M.Dates, rule=EnsureOnePersonForWalk)
 
 def EnsureDurationsSimilar(M, p):
-    return sum(sum(M.Lengths[t]*M.Assignments[t, d, p] for d in M.Dates) for t in M.Times) <= M.MaxWalkPortion*sum(sum(M.Lengths[t]*M.WalkNeeded[t, d] for d in M.Dates) for t in M.Times)
+    return sum(sum(M.Durations[t]*M.Assignments[t, d, p] for d in M.Dates) for t in M.Times) <= M.MaxWalkPortion*sum(sum(M.Durations[t]*M.WalkNeeded[t, d] for d in M.Dates) for t in M.Times)
 M.DurationsSimilar = Constraint(M.People, rule=EnsureDurationsSimilar)
 
 def EnsurePersonUnavailable(M, t, d, p):

@@ -107,22 +107,6 @@ sub get_event_name {
 	return $_[0]->{people_to_info}->{$name}->{walk_event_info}->{lc($time)}->{event_name};
 }
 
-sub get_length {
-	my $time = $_[1];
-
-	my $i = 0;
-	my $walks = $_[0]->{decoded_json}->{walk_info}->{walks};
-	while ($i < scalar(@{$walks})) {
-		my $walk = $walks->[$i];
-		if ($walk->{time} eq $time) {
-			return $walk->{duration};
-		}
-		$i++;
-	}
-
-	die "walk info for time $time does not exist";
-}
-
 sub is_evenly_distributed {
 	return $_[0]->{decoded_json}->{other_model_values}->{evenly_distribute};
 }

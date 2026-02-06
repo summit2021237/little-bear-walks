@@ -1,6 +1,6 @@
 #!/bin/bash
 # Load and create dat file
-perl ./src/config_to_dat.pl
+perl ./src/create_dat.pl
 
 # Solve model
 cd /usr/local/app/src

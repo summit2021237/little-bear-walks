@@ -155,7 +155,7 @@ Morning 01/31/2026 Person 2
 Midday 01/31/2026 Person 6
 Afternoon 01/31/2026 Person 6;
 
-param Lengths :=
+param Durations :=
 Morning 1
 Midday 2
 Afternoon 2;

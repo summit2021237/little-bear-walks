@@ -17,7 +17,7 @@ my @people = @{$config->{people}};
 write_sets();
 
 write_walk_needed();
-write_lengths();
+write_durations();
 write_max_walk_portion();
 write_all_walk_multiplier();
 
@@ -104,9 +104,9 @@ sub write_all_walk_multiplier {
 	write_to_dat("\nparam AllWalkMultiplier := $config->{other_model_values}->{all_walk_multiplier};\n");
 }
 
-sub write_lengths {
+sub write_durations {
 	write_to_dat("\n");
-	write_to_dat("param Lengths :=");
+	write_to_dat("param Durations :=");
 	foreach my $walk (@{$config->{walk_info}->{walks}}) {
 		write_to_dat("\n$walk->{time} $walk->{duration}");
 	}
