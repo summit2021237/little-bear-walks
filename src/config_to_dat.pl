@@ -39,7 +39,7 @@ sub write_params {
 	write_walk_needed();
 	write_ratings();
 	write_lengths();
-	write_max_walk_frac();
+	write_max_walk_portion();
 	write_all_walk_multiplier();
 }
 
@@ -133,17 +133,17 @@ sub write_multi_dim_param {
 	write_to_dat(";\n");
 }
 
-sub write_max_walk_frac {
+sub write_max_walk_portion {
 	my $val = 1;
 	if ($config->is_evenly_distributed()) {
-		$val = calc_max_walk_frac();
+		$val = calc_max_walk_portion();
 	} else {
 		# TODO: add support for different percentages for each person
 	}
-	write_one_dim_param("MaxWalkFrac", $val);
+	write_one_dim_param("MaxWalkPortion", $val);
 }
 
-sub calc_max_walk_frac {
+sub calc_max_walk_portion {
 	return 1/scalar(@{$config->get_person_names()})+.01; # allow for a small difference between the total amount of time for each person
 }
 

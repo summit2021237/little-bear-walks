@@ -160,6 +160,6 @@ Morning 1
 Midday 2
 Afternoon 2;
 
-param MaxWalkFrac := .34;
+param MaxWalkPortion := .34;
 
 param AllWalkMultiplier := 6;

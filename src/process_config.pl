@@ -18,7 +18,7 @@ write_sets();
 
 write_walk_needed();
 write_lengths();
-write_max_walk_frac();
+write_max_walk_portion();
 write_all_walk_multiplier();
 
 sub write_sets {
@@ -86,17 +86,17 @@ sub write_walk_needed {
 	write_to_dat(";\n");
 }
 
-sub write_max_walk_frac {
-	write_to_dat("\nparam MaxWalkFrac := ");
+sub write_max_walk_portion {
+	write_to_dat("\nparam MaxWalkPortion := ");
 	if ($config->{other_model_values}->{evenly_distribute}) {
-		write_to_dat(calc_max_walk_frac());
+		write_to_dat(calc_max_walk_portion());
 	} else {
-		write_to_dat($config->{other_model_values}->{max_walk_frac});
+		write_to_dat($config->{other_model_values}->{max_walk_portion});
 	}
 	write_to_dat(";\n");
 }
 
-sub calc_max_walk_frac {
+sub calc_max_walk_portion {
 	return 1/scalar(@people)+.01; # allow for a small difference between the total amount of time for each person
 }
 
