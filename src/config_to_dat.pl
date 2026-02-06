@@ -40,7 +40,7 @@ sub write_params {
 	write_ratings();
 	write_lengths();
 	write_max_walk_frac();
-	write_all_walk_factor();
+	write_all_walk_multiplier();
 }
 
 sub write_walk_needed {
@@ -147,8 +147,8 @@ sub calc_max_walk_frac {
 	return 1/scalar(@{$config->get_person_names()})+.01; # allow for a small difference between the total amount of time for each person
 }
 
-sub write_all_walk_factor {
-	write_one_dim_param("AllWalkFactor", $config->get_all_walk_factor());
+sub write_all_walk_multiplier {
+	write_one_dim_param("AllWalkMultiplier", $config->get_all_walk_multiplier());
 }
 
 sub write_one_dim_param {

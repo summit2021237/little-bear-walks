@@ -19,7 +19,7 @@ write_sets();
 write_walk_needed();
 write_lengths();
 write_max_walk_frac();
-write_all_walk_factor();
+write_all_walk_multiplier();
 
 sub write_sets {
 	write_times();
@@ -100,8 +100,8 @@ sub calc_max_walk_frac {
 	return 1/scalar(@people)+.01; # allow for a small difference between the total amount of time for each person
 }
 
-sub write_all_walk_factor {
-	write_to_dat("\nparam AllWalkFactor := $config->{other_model_params}->{all_walk_factor};\n");
+sub write_all_walk_multiplier {
+	write_to_dat("\nparam AllWalkMultiplier := $config->{other_model_params}->{all_walk_multiplier};\n");
 }
 
 sub write_lengths {

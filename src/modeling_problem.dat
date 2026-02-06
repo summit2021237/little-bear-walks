@@ -1,43 +1,165 @@
 set Times := Morning Midday Afternoon;
-set Dates := 12/01/2025 12/02/2025 12/03/2025;
-set People := p1 p2;
-
-param WalkNeeded :=
-Morning 12/01/2025 1
-Midday 12/01/2025 1
-Afternoon 12/01/2025 1
-Morning 12/02/2025 1
-Midday 12/02/2025 1
-Afternoon 12/02/2025 1
-Morning 12/03/2025 1
-Midday 12/03/2025 0
-Afternoon 12/03/2025 0;
+set Dates := 01/01/2026 01/02/2026 01/03/2026 01/04/2026 01/05/2026 01/06/2026 01/07/2026 01/08/2026 01/09/2026 01/10/2026 01/11/2026 01/12/2026 01/13/2026 01/14/2026 01/15/2026 01/16/2026 01/17/2026 01/18/2026 01/19/2026 01/20/2026 01/21/2026 01/22/2026 01/23/2026 01/24/2026 01/25/2026 01/26/2026 01/27/2026 01/28/2026 01/29/2026 01/30/2026 01/31/2026;
+set People := Buyer Ownie Person;
 
 param Ratings :=
-Morning 12/01/2025 p1 0
-Midday 12/01/2025 p1 10
-Afternoon 12/01/2025 p1 7
-Morning 12/02/2025 p1 3
-Midday 12/02/2025 p1 10
-Afternoon 12/02/2025 p1 0
-Morning 12/03/2025 p1 5
-Midday 12/03/2025 p1 9
-Afternoon 12/03/2025 p1 0
-Morning 12/01/2025 p2 1
-Midday 12/01/2025 p2 10
-Afternoon 12/01/2025 p2 8
-Morning 12/02/2025 p2 3
-Midday 12/02/2025 p2 9
-Afternoon 12/02/2025 p2 5
-Morning 12/03/2025 p2 1
-Midday 12/03/2025 p2 0
-Afternoon 12/03/2025 p2 0;
+Afternoon 01/07/2026 Buyer 1
+Morning 01/09/2026 Buyer 7
+Midday 01/09/2026 Buyer 3
+Afternoon 01/09/2026 Buyer 1
+Afternoon 01/12/2026 Buyer 1
+Morning 01/14/2026 Buyer 7
+Midday 01/14/2026 Buyer 5
+Afternoon 01/14/2026 Buyer 1
+Morning 01/16/2026 Buyer 4
+Midday 01/16/2026 Buyer 3
+Afternoon 01/21/2026 Buyer 1
+Morning 01/22/2026 Buyer 3
+Midday 01/23/2026 Buyer 3
+Afternoon 01/28/2026 Buyer 1
+Afternoon 01/28/2026 Buyer 2
+Midday 01/30/2026 Buyer 3
+Morning 01/01/2026 Ownie 7
+Morning 01/02/2026 Ownie 7
+Morning 01/03/2026 Ownie 0
+Midday 01/03/2026 Ownie 0
+Afternoon 01/03/2026 Ownie 0
+Morning 01/04/2026 Ownie 7
+Morning 01/05/2026 Ownie 7
+Afternoon 01/05/2026 Ownie 2
+Morning 01/06/2026 Ownie 7
+Morning 01/07/2026 Ownie 7
+Afternoon 01/07/2026 Ownie 3
+Morning 01/08/2026 Ownie 7
+Midday 01/08/2026 Ownie 0
+Afternoon 01/08/2026 Ownie 3
+Morning 01/09/2026 Ownie 7
+Afternoon 01/09/2026 Ownie 1
+Morning 01/10/2026 Ownie 4
+Midday 01/10/2026 Ownie 3
+Afternoon 01/10/2026 Ownie 3
+Morning 01/11/2026 Ownie 7
+Afternoon 01/11/2026 Ownie 3
+Morning 01/12/2026 Ownie 7
+Midday 01/12/2026 Ownie 3
+Afternoon 01/12/2026 Ownie 1
+Morning 01/13/2026 Ownie 7
+Morning 01/14/2026 Ownie 7
+Afternoon 01/14/2026 Ownie 3
+Morning 01/15/2026 Ownie 7
+Morning 01/16/2026 Ownie 0
+Midday 01/16/2026 Ownie 0
+Afternoon 01/16/2026 Ownie 0
+Morning 01/17/2026 Ownie 0
+Midday 01/17/2026 Ownie 0
+Afternoon 01/17/2026 Ownie 0
+Morning 01/18/2026 Ownie 0
+Midday 01/18/2026 Ownie 0
+Afternoon 01/18/2026 Ownie 0
+Morning 01/19/2026 Ownie 0
+Midday 01/19/2026 Ownie 0
+Afternoon 01/19/2026 Ownie 0
+Morning 01/20/2026 Ownie 4
+Afternoon 01/20/2026 Ownie 2
+Morning 01/21/2026 Ownie 7
+Midday 01/21/2026 Ownie 0
+Afternoon 01/21/2026 Ownie 3
+Morning 01/22/2026 Ownie 7
+Morning 01/23/2026 Ownie 7
+Afternoon 01/23/2026 Ownie 3
+Morning 01/24/2026 Ownie 7
+Morning 01/25/2026 Ownie 7
+Morning 01/26/2026 Ownie 7
+Midday 01/26/2026 Ownie 3
+Afternoon 01/26/2026 Ownie 1
+Morning 01/27/2026 Ownie 7
+Midday 01/27/2026 Ownie 3
+Afternoon 01/27/2026 Ownie 4
+Morning 01/28/2026 Ownie 7
+Afternoon 01/28/2026 Ownie 3
+Morning 01/29/2026 Ownie 7
+Morning 01/30/2026 Ownie 7
+Morning 01/31/2026 Ownie 0
+Midday 01/31/2026 Ownie 0
+Morning 01/01/2026 Person 9
+Midday 01/02/2026 Person 8
+Morning 01/03/2026 Person 4
+Midday 01/03/2026 Person 6
+Midday 01/04/2026 Person 8
+Morning 01/05/2026 Person 2
+Midday 01/05/2026 Person 0
+Afternoon 01/05/2026 Person 2
+Morning 01/06/2026 Person 1
+Midday 01/06/2026 Person 0
+Afternoon 01/06/2026 Person 9
+Morning 01/07/2026 Person 1
+Midday 01/07/2026 Person 0
+Afternoon 01/07/2026 Person 2
+Morning 01/08/2026 Person 2
+Midday 01/08/2026 Person 0
+Afternoon 01/08/2026 Person 9
+Midday 01/09/2026 Person 8
+Morning 01/10/2026 Person 2
+Midday 01/10/2026 Person 6
+Morning 01/11/2026 Person 4
+Midday 01/11/2026 Person 6
+Afternoon 01/11/2026 Person 6
+Morning 01/12/2026 Person 2
+Midday 01/12/2026 Person 0
+Afternoon 01/12/2026 Person 2
+Morning 01/13/2026 Person 1
+Midday 01/13/2026 Person 0
+Afternoon 01/13/2026 Person 9
+Morning 01/14/2026 Person 1
+Midday 01/14/2026 Person 0
+Afternoon 01/14/2026 Person 3
+Morning 01/15/2026 Person 0
+Midday 01/15/2026 Person 0
+Afternoon 01/15/2026 Person 0
+Morning 01/16/2026 Person 0
+Midday 01/16/2026 Person 0
+Morning 01/17/2026 Person 2
+Midday 01/17/2026 Person 6
+Afternoon 01/18/2026 Person 6
+Morning 01/19/2026 Person 2
+Midday 01/19/2026 Person 9
+Afternoon 01/19/2026 Person 2
+Morning 01/20/2026 Person 1
+Midday 01/20/2026 Person 0
+Afternoon 01/20/2026 Person 9
+Morning 01/21/2026 Person 1
+Midday 01/21/2026 Person 0
+Afternoon 01/21/2026 Person 3
+Morning 01/22/2026 Person 2
+Midday 01/22/2026 Person 0
+Afternoon 01/22/2026 Person 9
+Midday 01/23/2026 Person 8
+Morning 01/24/2026 Person 2
+Midday 01/24/2026 Person 6
+Afternoon 01/24/2026 Person 6
+Midday 01/25/2026 Person 8
+Morning 01/26/2026 Person 2
+Midday 01/26/2026 Person 0
+Afternoon 01/26/2026 Person 2
+Morning 01/27/2026 Person 1
+Midday 01/27/2026 Person 0
+Afternoon 01/27/2026 Person 9
+Morning 01/28/2026 Person 1
+Midday 01/28/2026 Person 0
+Afternoon 01/28/2026 Person 3
+Morning 01/29/2026 Person 2
+Midday 01/29/2026 Person 0
+Afternoon 01/29/2026 Person 9
+Midday 01/30/2026 Person 8
+Morning 01/31/2026 Person 2
+Midday 01/31/2026 Person 6
+Afternoon 01/31/2026 Person 6;
 
 param Lengths :=
 Morning 1
 Midday 2
 Afternoon 2;
 
-param MaxWalkFrac := .55;
+param MaxWalkFrac := .34;
 
-param ThreeWalkFactor := .5;
+param AllWalkMultiplier := 6;

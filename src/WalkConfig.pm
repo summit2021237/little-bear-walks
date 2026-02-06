@@ -127,8 +127,8 @@ sub is_evenly_distributed {
 	return $_[0]->{decoded_json}->{other_model_params}->{evenly_distribute};
 }
 
-sub get_all_walk_factor {
-	return $_[0]->{decoded_json}->{other_model_params}->{all_walk_factor};
+sub get_all_walk_multiplier {
+	return $_[0]->{decoded_json}->{other_model_params}->{all_walk_multiplier};
 }
 
 1;

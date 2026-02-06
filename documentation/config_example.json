@@ -90,6 +90,6 @@
 	],
 	"other_model_params": {
 		"evenly_distribute": true,
-		"all_walk_factor": 7.5
+		"all_walk_multiplier": 7.5
 	}
 }
