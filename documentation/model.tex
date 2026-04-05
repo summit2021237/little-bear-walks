@@ -1,0 +1,331 @@
+\documentclass{notes}
+
+\settitle{Little Bear Walks Model}
+\setdate{04/05/2026}
+
+\begin{document}
+\section*{Intoduction}
+My family’s dog, Little Bear, needs three walks each day, and we do not have a good way to determine who is walking her for each walk. This is mainly because of our complex and irregular schedules and walk durations that vary between walks, so we cannot have a consistent walk schedule. Additionally, there are speciﬁc walk times and dates that people prefer or do not prefer, and scheduling to account for those preferences can be difﬁcult.\\
+
+This software takes in walks to be assigned, and each person rates their preference for each walk on a scale of 0 to 9. Then, a Pyomo model generates an optimal walk schedule based on a mathematical model and creates ICS files so that each person can import their walks into their calendar.
+\section*{Previous Solution}
+Our original solution was to create a spreadsheet, let family members enter walk preferences into a notes column, and have a set date and time where people can start signing up for walks. The spreadsheet calculated the number of hours each person would walk the dog for, and we could manually check whether each person had a roughly equal amount of time.\\
+
+That solution was not very effective because sometimes, people would forget to enter their walk preferences before the sign-up time, and if they were last to sign up, they could be forced to sign up for walks where they were unavailable. Then, everyone would have to discuss and trade walks until the schedule worked for everyone. That system also gave an advantage to people who could enter values into a spreadsheet faster, so some people might get all the walks they prefer, while other people do not get any of the walks they prefer.
+\section*{The Model}
+We model the walk assignments to maximize everyone's preferences. Let $p$ index the set of people $P$, let $d$ index the set of days to assign walks to $D$, and let $t$ index the set of times of day to assign walks to $T$. We have the following parameters that describe the model:
+\begin{align*}
+	w_{td}\quad&-\quad\begin{cases}
+		1 & \text{ if a walk is needed for day $d$ at time $t$}\\
+		0 & \text{ otherwise}
+	\end{cases}\\
+	r_{tdp}\quad&-\quad\text{ rating assigned to the walk for day $d$ at time $t$ by person $p$}\\
+	l_t\quad&-\quad\text{ relative length of the walk at time $t$ in terms of duration}\\
+	M\quad&-\quad\text{ maximum fraction of total walk durations each person should have}\\
+	A\quad&-\quad\text{ scale factor to decrease the chance of having all the walks for one day.}
+\end{align*}
+Let $x_{tdp}$ be $1$ if person $p$ is assigned to the walk for day $d$ at time $t$ and $0$ otherwise, and let $a_{dp}$ be $1$ if person $p$ is assigned to all the walks for day $d$ and $0$ otherwise. Then, we solve the following model to minimize cost.
+\[\max\sum_{\substack{t\in T\\ d\in D\\ p\in P}}\left[r_{tdb}w_{td}x_{tdb}+A\sum_{\substack{d\in D\\ p\in P}}\left(2-\sum_{t\in T}x_{tdp}\right)\right]\]
+such that
+\begin{align}
+	w_{td}&=\sum_{p\in P}x_{tdp}\text{ for all $t\in T$ and $d\in D$}\label{constraint1}\\
+	\sum_{\substack{t\in T\\ d\in D}}l_tw_{td}x_{tdp}&\leq M\sum_{\substack{t\in T\\ d\in D}}l_tw_{td}\text{ for all $p\in P$}\label{constraint2}\\
+	x_{tdp}&\leq r_{tdp}\text{ for all $t\in T$, $d\in D$, and $p\in P$}\label{constraint3}\\
+	\sum_{t\in T}x_{tdp}-2&\leq a_{dp}\text{ for all $d\in D$ and $p\in P$}\label{constraint4}\\
+	\sum_{t\in T}x_{tdp}&\geq 3a_{dp}\text{ for all $d\in D$ and $p\in P$}\label{constraint5}\\
+	x_{tdp}&\in\{0,1\}\text{ for all $t\in T$, $d\in D$, and $p\in P$.}
+\end{align}
+\subsection*{Explanations of Constraints}
+Constraint \ref{constraint1} ensures there is exactly one person assigned to each walk.\\
+
+Constraint \ref{constraint2} ensures each person does not have a larger portion of walk hours than what was specified in the configuration file.\\
+
+Constraint \ref{constraint3} ensures that if a person rates a walk as $0$, meaning they are unavailable, they are not assigned to the walk.\\
+
+Constraints \ref{constraint4} and \ref{constraint5} ensure $a_{dp}$ has the correct value by providing upper and lower bounds.
+\subsection*{Rating Scale}
+The rating scale is
+\begin{align*}
+	\text{0}\quad&-\quad\text{Unavailable and not possible to be available (ex: out of town)}\\
+	\text{1}\quad&-\quad\text{Unavailable but possible and inconvenient to be available (ex: doctor's appointment)}\\
+	\text{2}\quad&-\quad\text{Between 1 and 3}\\
+	\text{3}\quad&-\quad\text{Does not prefer this walk}\\
+	\text{4}\quad&-\quad\text{Between 3 and 5}\\
+	\text{5}\quad&-\quad\text{No preference}\\
+	\text{6}\quad&-\quad\text{Between 5 and 7}\\
+	\text{7}\quad&-\quad\text{Prefers this walk}\\
+	\text{8}\quad&-\quad\text{Between 7 and 9}\\
+	\text{9}\quad&-\quad\text{Some kind of special event (ex: annual bunny hunting day).}
+\end{align*}
+\section*{Model Validation}
+We test the model on a simple example and an entire month.
+\subsection*{Simple Example}
+We create an instance of the model with $P=\{\text{p1},\text{p2}\}$,\newline $D=\{\text{12/01/2025},\text{12/02/2025},\text{12/03/2025}\}$, and $T=\{\text{Morning},\text{Midday},\text{Afternoon}\}$, $M=\frac{11}{20}$, and $A=7.5$. The remaining parameters are in the tables below.\\
+\begin{center}
+	\begin{tabular}{c|c}
+		Walk Time ($t$) & Relative duration ($l_t$)\\
+		\hline
+		Morning & 1\\
+		Midday & 2\\
+		Afternoon & 2
+	\end{tabular}
+
+	\vspace{1em}
+
+	\begin{tabular}{c|ccc}
+		& \multicolumn{3}{c}{Walk Needed ($w_{td}$)}\\
+		Date & Morning & Midday & Afternoon\\
+		\hline
+		12/01/2025 & 1 & 1 & 1\\
+		12/02/2025 & 1 & 1 & 1\\
+		12/03/2025 & 1 & 0 & 0
+	\end{tabular}
+
+	\vspace{1em}
+
+	\begin{tabular}{c|ccc}
+		& \multicolumn{3}{c}{Ratings for p1 ($r_{tdp}$, $p=\text{p1}$)}\\
+		Date & Morning & Midday & Afternoon\\
+		\hline
+		12/01/2025 & 0 & 9 & 7\\
+		12/02/2025 & 3 & 9 & 0\\
+		12/03/2025 & 5 & 8 & 0
+	\end{tabular}\qquad
+	\begin{tabular}{c|ccc}
+		& \multicolumn{3}{c}{Ratings for p2 ($r_{tdp}$, $p=\text{p2}$)}\\
+		Date & Morning & Midday & Afternoon\\
+		\hline
+		12/01/2025 & 1 & 9 & 7\\
+		12/02/2025 & 3 & 8 & 5\\
+		12/03/2025 & 1 & 0 & 0
+	\end{tabular}
+\end{center}
+We expect midday and afternoon on 12/03/2025 to not have assigments, and p2 should at least be assigned to the morning walk on 12/01/2025 and afternoon walk on 12/02/2025.\\
+
+Running the model, we get
+\begin{center}
+	\begin{tabular}{c|ccc}
+		& Morning & Midday & Afternoon\\
+		\hline
+		12/01/2025 & p2 & p1 & p2\\
+		12/02/2025 & p2 & p1 & p2\\
+		12/03/2025 & p1 & N/A & N/A
+	\end{tabular}
+\end{center}
+We see that the total durations are 5 for p1 and 6 for p2, which is as close as they can get.
+
+\subsection*{One Month}
+We use March 2026 with $P=\{\text{p1},\text{p2}, \text{p3}\}$, $D=\{\text{03/01/2026},\dots,\text{03/31/2026}\}$, and $T=\{\text{Morning},\text{Midday},\text{Afternoon}\}$, $M=.34$, and $A=7.5$. The value of $A$ is $7.5$ because then we subtract a rating of 2.5, half of no preference (5), from each of the three walks for that day. The remaining parameters are in the tables below.\\
+\begin{center}
+	\begin{tabular}{c|c}
+		Walk Time ($t$) & Relative duration ($l_t$)\\
+		\hline
+		Morning & 1\\
+		Midday & 2\\
+		Afternoon & 2
+	\end{tabular}
+
+	\vspace{1em}
+
+	\begin{tabular}{c|ccc}
+		& \multicolumn{3}{c}{Walk Needed ($w_{td}$)}\\
+		Date & Morning & Midday & Afternoon\\
+		\hline
+		03/01/2026 & 1 & 1 & 1\\
+		03/02/2026 & 1 & 1 & 1\\
+		03/03/2026 & 1 & 1 & 1\\
+		03/04/2026 & 1 & 1 & 1\\
+		03/05/2026 & 1 & 1 & 1\\
+		03/06/2026 & 1 & 1 & 1\\
+		03/07/2026 & 1 & 1 & 1\\
+		03/08/2026 & 1 & 1 & 1\\
+		03/09/2026 & 1 & 1 & 1\\
+		03/10/2026 & 1 & 1 & 1\\
+		03/11/2026 & 1 & 1 & 1\\
+		03/12/2026 & 1 & 1 & 1\\
+		03/13/2026 & 1 & 1 & 1\\
+		03/14/2026 & 1 & 1 & 1\\
+		03/15/2026 & 1 & 1 & 1\\
+		03/16/2026 & 1 & 1 & 1\\
+		03/17/2026 & 0 & 0 & 0\\
+		03/18/2026 & 0 & 0 & 0\\
+		03/19/2026 & 0 & 0 & 0\\
+		03/20/2026 & 0 & 1 & 1\\
+		03/21/2026 & 1 & 1 & 1\\
+		03/22/2026 & 1 & 1 & 1\\
+		03/23/2026 & 1 & 1 & 1\\
+		03/24/2026 & 1 & 1 & 1\\
+		03/25/2026 & 1 & 1 & 1\\
+		03/26/2026 & 1 & 1 & 1\\
+		03/27/2026 & 1 & 1 & 1\\
+		03/28/2026 & 1 & 1 & 1\\
+		03/29/2026 & 1 & 1 & 1\\
+		03/30/2026 & 1 & 1 & 1\\
+		03/31/2026 & 1 & 1 & 1
+	\end{tabular}\qquad
+	\begin{tabular}{c|ccc}
+		& \multicolumn{3}{c}{Ratings for p1 ($r_{tdp}$, $p=\text{p1}$)}\\
+		Date & Morning & Midday & Afternoon\\
+		\hline
+		03/01/2026 & 0 & 0 & 0\\
+		03/02/2026 & 0 & 0 & 0\\
+		03/03/2026 & 0 & 0 & 0\\
+		03/04/2026 & 0 & 0 & 0\\
+		03/05/2026 & 1 & 5 & 3\\
+		03/06/2026 & 5 & 1 & 5\\
+		03/07/2026 & 9 & 1 & 1\\
+		03/08/2026 & 5 & 5 & 5\\
+		03/09/2026 & 5 & 5 & 5\\
+		03/10/2026 & 5 & 5 & 5\\
+		03/11/2026 & 5 & 5 & 1\\
+		03/12/2026 & 5 & 5 & 1\\
+		03/13/2026 & 5 & 3 & 5\\
+		03/14/2026 & 5 & 5 & 5\\
+		03/15/2026 & 5 & 5 & 5\\
+		03/16/2026 & 5 & 5 & 5\\
+		03/17/2026 & 0 & 0 & 0\\
+		03/18/2026 & 0 & 0 & 0\\
+		03/19/2026 & 0 & 0 & 0\\
+		03/20/2026 & 0 & 0 & 0\\
+		03/21/2026 & 0 & 0 & 0\\
+		03/22/2026 & 0 & 0 & 0\\
+		03/23/2026 & 0 & 0 & 0\\
+		03/24/2026 & 5 & 5 & 5\\
+		03/25/2026 & 5 & 5 & 1\\
+		03/26/2026 & 5 & 1 & 5\\
+		03/27/2026 & 5 & 5 & 5\\
+		03/28/2026 & 5 & 5 & 5\\
+		03/29/2026 & 5 & 5 & 5\\
+		03/30/2026 & 5 & 5 & 5\\
+		03/31/2026 & 5 & 5 & 5
+	\end{tabular}
+
+	\vspace{1em}
+
+	\begin{tabular}{c|ccc}
+		& \multicolumn{3}{c}{Ratings for p2 ($r_{tdp}$, $p=\text{p2}$)}\\
+		Date & Morning & Midday & Afternoon\\
+		\hline
+		03/01/2026 & 7 & 5 & 5\\
+		03/02/2026 & 7 & 5 & 0\\
+		03/03/2026 & 7 & 5 & 5\\
+		03/04/2026 & 7 & 5 & 3\\
+		03/05/2026 & 0 & 0 & 0\\
+		03/06/2026 & 0 & 0 & 2\\
+		03/07/2026 & 7 & 2 & 0\\
+		03/08/2026 & 0 & 0 & 0\\
+		03/09/2026 & 7 & 0 & 0\\
+		03/10/2026 & 3 & 5 & 5\\
+		03/11/2026 & 7 & 5 & 3\\
+		03/12/2026 & 7 & 5 & 5\\
+		03/13/2026 & 7 & 5 & 5\\
+		03/14/2026 & 7 & 5 & 5\\
+		03/15/2026 & 7 & 5 & 5\\
+		03/16/2026 & 7 & 5 & 2\\
+		03/17/2026 & 3 & 5 & 5\\
+		03/18/2026 & 7 & 5 & 2\\
+		03/19/2026 & 7 & 1 & 5\\
+		03/20/2026 & 7 & 5 & 5\\
+		03/21/2026 & 7 & 3 & 3\\
+		03/22/2026 & 7 & 5 & 3\\
+		03/23/2026 & 7 & 3 & 2\\
+		03/24/2026 & 7 & 5 & 5\\
+		03/25/2026 & 7 & 5 & 2\\
+		03/26/2026 & 7 & 5 & 2\\
+		03/27/2026 & 7 & 5 & 3\\
+		03/28/2026 & 7 & 0 & 2\\
+		03/29/2026 & 7 & 0 & 0\\
+		03/30/2026 & 7 & 5 & 5\\
+		03/31/2026 & 7 & 5 & 5
+	\end{tabular}\qquad
+	\begin{tabular}{c|ccc}
+		& \multicolumn{3}{c}{Ratings for p3 ($r_{tdp}$, $p=\text{p3}$)}\\
+		Date & Morning & Midday & Afternoon\\
+		\hline
+		03/01/2026 & 2 & 7 & 5\\
+		03/02/2026 & 5 & 0 & 7\\
+		03/03/2026 & 0 & 0 & 3\\
+		03/04/2026 & 0 & 0 & 7\\
+		03/05/2026 & 5 & 0 & 7\\
+		03/06/2026 & 5 & 0 & 7\\
+		03/07/2026 & 1 & 5 & 7\\
+		03/08/2026 & 2 & 7 & 5\\
+		03/09/2026 & 1 & 0 & 5\\
+		03/10/2026 & 0 & 0 & 7\\
+		03/11/2026 & 0 & 0 & 7\\
+		03/12/2026 & 5 & 0 & 7\\
+		03/13/2026 & 0 & 0 & 7\\
+		03/14/2026 & 1 & 7 & 5\\
+		03/15/2026 & 1 & 7 & 5\\
+		03/16/2026 & 1 & 0 & 5\\
+		03/17/2026 & 0 & 0 & 0\\
+		03/18/2026 & 0 & 0 & 0\\
+		03/19/2026 & 0 & 0 & 0\\
+		03/20/2026 & 0 & 0 & 0\\
+		03/21/2026 & 0 & 0 & 0\\
+		03/22/2026 & 0 & 0 & 0\\
+		03/23/2026 & 0 & 0 & 0\\
+		03/24/2026 & 0 & 0 & 7\\
+		03/25/2026 & 0 & 0 & 7\\
+		03/26/2026 & 0 & 0 & 7\\
+		03/27/2026 & 0 & 0 & 7\\
+		03/28/2026 & 1 & 7 & 5\\
+		03/29/2026 & 1 & 7 & 5\\
+		03/30/2026 & 1 & 7 & 5\\
+		03/31/2026 & 0 & 0 & 9
+	\end{tabular}
+\end{center}
+
+\pagebreak
+
+Running the model, we get
+\begin{center}
+	\begin{tabular}{c|ccc}
+		& Morning & Midday & Afternoon\\
+		\hline
+		03/01/2026 & p2 & p3 & p3\\
+		03/02/2026 & p2 & p2 & p3\\
+		03/03/2026 & p2 & p2 & p3\\
+		03/04/2026 & p2 & p2 & p3\\
+		03/05/2026 & p3 & p1 & p3\\
+		03/06/2026 & p1 & p1 & p3\\
+		03/07/2026 & p1 & p3 & p3\\
+		03/08/2026 & p1 & p3 & p1\\
+		03/09/2026 & p2 & p1 & p1\\
+		03/10/2026 & p1 & p1 & p3\\
+		03/11/2026 & p2 & p1 & p3\\
+		03/12/2026 & p2 & p1 & p3\\
+		03/13/2026 & p2 & p1 & p3\\
+		03/14/2026 & p2 & p3 & p1\\
+		03/15/2026 & p2 & p3 & p1\\
+		03/16/2026 & p2 & p1 & p1\\
+		03/17/2026 & N/A & N/A & N/A\\
+		03/18/2026 & N/A & N/A & N/A\\
+		03/19/2026 & N/A & N/A & N/A\\
+		03/20/2026 & N/A & p2 & p2\\
+		03/21/2026 & p2 & p2 & p2\\
+		03/22/2026 & p2 & p2 & p2\\
+		03/23/2026 & p2 & p2 & p2\\
+		03/24/2026 & p2 & p1 & p3\\
+		03/25/2026 & p2 & p1 & p3\\
+		03/26/2026 & p2 & p2 & p3\\
+		03/27/2026 & p2 & p1 & p3\\
+		03/28/2026 & p2 & p3 & p1\\
+		03/29/2026 & p2 & p3 & p1\\
+		03/30/2026 & p2 & p1 & p1\\
+		03/31/2026 & p2 & p1 & p3
+	\end{tabular}
+\end{center}
+Adding the number of durations, we find that p1 has 46, p2 has 46, and p3 has 47. We also notice that no one has all three walks in a day, unless no one else is available.
+\section*{Strengths and Weaknesses}
+We discuss some of the strengths and weaknesses of the model.
+\subsection*{Strengths}
+The model accounts for each person's preferences and includes a factor to reduce the number of times one person has all the walks for one day. It is also much faster at assigning walks so that each person has roughly the same number of hours and is satisfied with the result than a method where the first person to select a walk gets it.
+\subsection*{Weaknesses}
+A weakness is that the preference ratings may not be as accurate since each person determines what they think their ratings should be. There are some examples of how the preference rating values should be assigned, but the values are still subjective. That could lead to some people's ratings having more weight than other people's ratings for the similar situations.\\
+
+Another weakness is that the model only supports three walks per day. In the future, the constraints could be generalized to the number of walk times in the configuration file.
+\section*{Conclusion}
+The model is effective at assigning walks based on preferences and is more fair than the previous solution of choosing open walk time slots from a spreadsheet. The model has been used to assign walks starting from January 2026, and so far, everyone has been satisfied with the assignments. It has also saved lots of time that was spent trading walks to ensure the assignments worked with everyone's schedule.
+\end{document}
+
