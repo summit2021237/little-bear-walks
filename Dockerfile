@@ -42,7 +42,7 @@ WORKDIR /usr/local/app
 
 # Install Perl
 RUN apt install -y curl
-RUN curl -L http://xrl.us/installperlnix | bash
+RUN curl -L https://xrl.us/installperlnix | bash
 
 # Install Perl Modules
 RUN cpan DateTime
