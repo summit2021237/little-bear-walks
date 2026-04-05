@@ -2,15 +2,15 @@
 	"walk_info": {
 		"walks": [{
 			"time": "Morning",
-			"duration": 1
+			"duration": 30
 		},
 		{
 			"time": "Midday",
-			"duration": 2
+			"duration": 60
 		},
 		{
 			"time": "Afternoon",
-			"duration": 2
+			"duration": 60
 		}
 		],
 		"start_date": "01/01/2026",
