@@ -1,0 +1,10 @@
+*.aux
+*.log
+
+config.json*
+*.dat
+data
+
+output*
+
+install_perl_on_nix.sh
