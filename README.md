@@ -13,7 +13,7 @@ git clone https://github.com/summit2021237/little-bear-walks.git
 ## Usage
 The dog walk scheduler takes in a configuration JSON file in the top-level directory and walk ratings in a `data` directory. It outputs an `output` directory containing a text file of Pyomo's solution, a CSV file with the walk assignments, and ICS files with calendar events for each person's walks.  
 
-An example file tree after running the scheduler with person1, person2, and person4 is below.
+An example file tree after running the scheduler with person1, person2, and person3 is below.
 ```
 .
 ├── config.json
@@ -58,6 +58,7 @@ Each person can rate their preference for each walk on the scale 0-9 defined by
 - 7: Prefers this walk
 - 8: Between 7 and 9
 - 9: Some kind of special event (ex: annual bunny hunting day)  
+
 There is one rating file per person, which goes in the `data` directory. The rating file must have the format
 | Date       | Time1  | Time2  | ... | TimeN  |
 | ---------- | ------ | ------ | --- | ------ |
