@@ -3,8 +3,8 @@ This is a dog walk scheduler that creates an optimal dog walking schedule using 
 ## Installation
 The dog walk scheduler can be installed and run from the source code.
 ### Prerequisites
-Docker
-Make
+- Docker
+- Make
 ### Download
 Clone the repository or download a ZIP file.
 ```
@@ -12,6 +12,7 @@ git clone https://github.com/summit2021237/little-bear-walks.git
 ```
 ## Usage
 The dog walk scheduler takes in a configuration JSON file in the top-level directory and walk ratings in a `data` directory. It outputs an `output` directory containing a text file of Pyomo's solution, a CSV file with the walk assignments, and ICS files with calendar events for each person's walks.  
+
 An example file tree after running the scheduler with person1, person2, and person4 is below.
 ```
 .
@@ -56,7 +57,7 @@ Each person can rate their preference for each walk on the scale 0-9 defined by
 - 6: Between 5 and 7
 - 7: Prefers this walk
 - 8: Between 7 and 9
-- 9: Some kind of special event (ex: annual bunny hunting day)
+- 9: Some kind of special event (ex: annual bunny hunting day)  
 There is one rating file per person, which goes in the `data` directory. The rating file must have the format
 | Date       | Time1  | Time2  | ... | TimeN  |
 | ---------- | ------ | ------ | --- | ------ |
@@ -76,8 +77,6 @@ There are three types of output files
 - `*.ics`
 #### `assignments.csv`
 This file contains all the walk assignments, formatted as
-| Date       | Time1 | Time2 | ... | TimeN |
-| ---------- | ----- | ----- | --- | ----- |
 | MM/DD/YYYY | Name  | Name  | ... | Name  |
 | ...        | ...   | ...   | ... | ...   |
 | MM/DD/YYYY | Name  | Name  | ... | Name  |
