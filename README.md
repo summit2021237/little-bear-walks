@@ -77,7 +77,9 @@ There are three types of output files
 - `solution.txt`
 - `*.ics`
 #### `assignments.csv`
-This file contains all the walk assignments, formatted as
+This file contains all the walk assignments, formatted as  
+|            |       |       |     |       |
+| ---------- | ----- | ----- | --- | ----- |
 | MM/DD/YYYY | Name  | Name  | ... | Name  |
 | ...        | ...   | ...   | ... | ...   |
 | MM/DD/YYYY | Name  | Name  | ... | Name  |
