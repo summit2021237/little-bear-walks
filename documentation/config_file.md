@@ -50,7 +50,7 @@ This field is an array of objects describing people to assign to walks with fiel
 - `ratings_file`: The name of the CSV file that the person's walk ratings are in
   - The ratings file should be in the `data` directory
 - `walk_event_info`: An object with fields for each walk time describing how that person's calendar events should be created
-- `max_walk_portion`: An optional field describing the maximum percentage of the total duration of the walks that person can have (see `evenly_distribute` from [`other_model_values`](#other_model_values))
+- `max_walk_amount`: An optional field describing the maximum percentage of the total duration of the walks that person can have (see `evenly_distribute` from [`other_model_values`](#other_model_values))
 
 Example:
 ```
@@ -81,7 +81,7 @@ Example:
 ## `other_model_values`
 This field is an object with fields
 - `evenly_distribute`: `true` if each person should be assigned to roughly the same total duration of walk time, `false` otherwise
-  - If `false`, each object in the `people` array must have another field `max_walk_portion` describing the maximum percentage of the total duration of the walks the person can have
+  - If `false`, each object in the `people` array must have another field `max_walk_amount` describing the maximum percentage of the total duration of the walks the person can have
 - `all_walk_multiplier`: Multiplier to decrease the possibility of one person being assigned to all the walks for a day
   - $A$ in the objective function,
 
