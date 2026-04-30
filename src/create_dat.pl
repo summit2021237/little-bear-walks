@@ -39,7 +39,7 @@ sub write_params {
 	write_walk_needed();
 	write_ratings();
 	write_durations();
-	write_max_walk_portion();
+	write_max_walk_amounts();
 	write_all_walk_multiplier();
 }
 
@@ -111,6 +111,21 @@ sub is_valid_rating {
 	return $_[0] >= 0 && $_[0] <= 9;
 }
 
+sub write_max_walk_amounts {
+	my @val_refs = ();
+	if ($config->is_evenly_distributed()) {
+		my $amount = calc_max_walk_amount();
+		foreach my $person_name (@{$config->get_person_names()}) {
+			push(@val_refs, [$person_name, $amount]);
+		}
+	}
+	write_multi_dim_param("MaxWalkAmounts", @val_refs);
+}
+
+sub calc_max_walk_amount {
+	return 1/scalar(@{$config->get_person_names()})+.01; # allow for a small difference between the total amount of time for each person
+}
+
 sub write_durations {
 	my @val_refs = ();
 	foreach my $time (@{$config->get_times()}) {
@@ -131,20 +146,6 @@ sub write_multi_dim_param {
 		write_to_dat(sprintf("\n%s", join(" ", @{$val_ref})));
 	}
 	write_to_dat(";\n");
-}
-
-sub write_max_walk_portion {
-	my $val = 1;
-	if ($config->is_evenly_distributed()) {
-		$val = calc_max_walk_portion();
-	} else {
-		# TODO: add support for different percentages for each person
-	}
-	write_one_dim_param("MaxWalkPortion", $val);
-}
-
-sub calc_max_walk_portion {
-	return 1/scalar(@{$config->get_person_names()})+.01; # allow for a small difference between the total amount of time for each person
 }
 
 sub write_all_walk_multiplier {
