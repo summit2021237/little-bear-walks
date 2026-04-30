@@ -118,6 +118,10 @@ sub write_max_walk_amounts {
 		foreach my $person_name (@{$config->get_person_names()}) {
 			push(@val_refs, [$person_name, $amount]);
 		}
+	} else {
+		foreach my $person_name (@{$config->get_person_names()}) {
+			push (@val_refs, [$person_name, $config->get_max_walk_amount($person_name)]);
+		}
 	}
 	write_multi_dim_param("MaxWalkAmounts", @val_refs);
 }

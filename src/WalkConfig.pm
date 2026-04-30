@@ -111,6 +111,11 @@ sub is_evenly_distributed {
 	return $_[0]->{decoded_json}->{other_model_values}->{evenly_distribute};
 }
 
+sub get_max_walk_amount {
+	my ($walk_config, $name) = @_;
+	return $_[0]->{people_to_info}->{$name}->{max_walk_amount};
+}
+
 sub get_all_walk_multiplier {
 	return $_[0]->{decoded_json}->{other_model_values}->{all_walk_multiplier};
 }
