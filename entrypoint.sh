@@ -1,6 +1,9 @@
 #!/bin/bash
 # Load and create dat file
 perl ./src/create_dat.pl
+if (($? != 0)); then
+	exit 1
+fi
 
 # Solve model
 cd /usr/local/app/src

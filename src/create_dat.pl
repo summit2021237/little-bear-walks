@@ -103,12 +103,14 @@ sub add_ratings_for_person_for_date {
 		}
 		if (is_valid_rating($rating)) {
 			push(@{$val_refs_ref}, [$times[$i], $date, $person_name, $rating]);
+		} else {
+			die "invalid rating for $person_name on $date for the $times[$i] walk"
 		}
 	}
 }
 
 sub is_valid_rating {
-	return $_[0] >= 0 && $_[0] <= 9;
+	return $_[0] =~ /^[0-9]$/
 }
 
 sub write_max_walk_amounts {
